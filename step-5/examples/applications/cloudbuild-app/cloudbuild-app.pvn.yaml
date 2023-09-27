@@ -1,0 +1,16 @@
+application:
+  name: cloudbuild-app  # name can be whatever you want
+  # this config defines two release channels: a staging and a production. Add/remove release channels as needed for your use case.
+  releaseChannels:
+  - name: staging
+    runtimes:
+      - runtime: cloudbuild-trigger  # name of the Runtime Extension from the previous step
+        type: EXTENSION
+  - name: production
+    runtimes:
+      - runtime: cloudbuild-trigger
+        type: EXTENSION
+    preconditions:
+    - releaseChannelStable:
+        releaseChannel: staging
+    - manualApproval: {}
