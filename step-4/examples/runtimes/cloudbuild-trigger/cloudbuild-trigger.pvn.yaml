@@ -1,0 +1,30 @@
+runtime:
+  name: cloudbuild-trigger  # the name can be whatever you want
+  extension:
+    proxyRuntime:
+      runtime: my-runtime  # this should be the runtime name for your Kubernetes cluster you chose when you linked the cluster to Prodvana
+      containerOrchestration:
+        k8s:
+          namespace: cloudbuild-trigger  # this should be the namespace you created for running Kubernetes jobs to trigger Cloud Build
+    apply:
+      kubernetesConfig:
+        type: KUBERNETES
+        local:
+          path: job.yaml  # this should be the relative path to your Kubernetes job.yaml
+    parameters:
+    - name: substitutions
+      description: a string of cloudbuild substitutions flags to pass to the binary
+      string:
+        defaultValue: ""
+    - name: cloudbuild_project
+      description: GCP Project name/id where Google CloudBuild trigger is defined
+      string:
+        defaultValue: ""
+    - name: cloudbuild_trigger
+      description: GCP CloudBuild trigger name/id
+      string:
+        defaultValue: ""
+    - name: version
+      description: Tag of commit to run against
+      string:
+        defaultValue: ""

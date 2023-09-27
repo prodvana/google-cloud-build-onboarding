@@ -1,0 +1,32 @@
+service:
+  name: cloudbuild-svc  # the name can be whatever you want
+  application: cloudbuild-app  # name of the app you chose in the app config file
+  perReleaseChannel:
+  - releaseChannel: staging
+    runtimeConnection: cloudbuild-configmap  # name of the runtime extension
+    runtimeExtension:
+      parameterValues:
+      - name: substitutions
+        string: "_NAME=var"
+      - name: cloudbuild_project
+        string: "gcp-project-containing-cloud-build"
+      - name: cloudbuild_trigger
+        string: "your-trigger-name"
+      - name: version
+        string: "{{.Params.version}}"
+  - releaseChannel: production
+    runtimeConnection: cloudbuild-configmap  # name of the runtime extension
+    runtimeExtension:
+      parameterValues:
+      - name: substitutions
+        string: "_NAME=var"
+      - name: cloudbuild_project
+        string: "gcp-project-containing-cloud-build"
+      - name: cloudbuild_trigger
+        string: "your-trigger-name"
+      - name: version
+        string: "{{.Params.version}}"
+  parameters:
+  - name: version
+    string:
+      defaultValue: ""

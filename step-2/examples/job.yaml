@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: cloudbuild-trigger-
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      containers:
+      - name: cloudbuild-trigger
+        image: gcr.io/cloud-builders/gcloud:latest
+        command:
+        - /bin/sh
+        args:
+        - -eux
+        - -c
+        - gcloud auth activate-service-account --key-file=/google_credentials/key.json && gcloud --project='{{.Params.cloudbuild_project}}' beta builds log --stream $(gcloud --project='{{.Params.cloudbuild_project}}' builds triggers run --region us-central1 '{{.Params.cloudbuild_trigger}}' --substitutions '{{.Params.substitutions}}' --tag '{{.Params.version}}' --format 'value(metadata.build.name)')
+        volumeMounts:
+        - name: gcp-secret-mount
+          readOnly: true
+          mountPath: "/google_credentials"
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /google_credentials/key.json
+      volumes:
+      - name: gcp-secret-mount
+        secret:
+          secretName: cloudbuild-sa-key
+      restartPolicy: Never
+  backoffLimit: 0
