@@ -27,7 +27,7 @@ gcloud projects add-iam-policy-binding {project-with-cloud-build} --member=servi
 7. Authenticate kubectl to your newly created cluster. This is best done via the GCP console, by going to "Kubernetes Engine", your cluster, "CONNECT" and pasting the `gcloud` command. Note that your cluster must already be fully up and healthy.
 8. Create a namespace that Prodvana will use to execute jobs in. The name can be whatever you want. This tutorial uses `cloudbuild-trigger`.
 ```
-kubectl create namespacee cloudbuild-trigger
+kubectl create namespace cloudbuild-trigger
 ```
 9. Upload your service account key to Kubernetes as a Secret. The secret name can be whatever you want. This tutorial uses `cloudbuild-sa-key`.
 ```
